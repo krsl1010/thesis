@@ -51,10 +51,10 @@ def local_optim(model, s, X, y, T=1):
     # Keep the large jump indices s unchanged 
     rem_idx = np.setdiff1d(all_indices, s)
     # take subset for computational reasons 
-    best_lik = log_lik(model, X, y, T=T)  # Fixed T usage
+    best_lik = log_lik(model, X, y, T=T)
     best_model = model.copy()
     
-    cur = best_model.copy()  # Start from best_model each iteration
+    cur = best_model.copy() 
     for i in range(0, len(rem_idx)):
         for j in range(i + 1, len(rem_idx)):
             cur = best_model.copy()
@@ -70,7 +70,6 @@ def local_optim(model, s, X, y, T=1):
 
 def randomization(model, p_swap=0.1):
     new_model = model.copy()
-    #print(s, rem_idx)
     for j in range(len(new_model)):
         if np.random.rand() < p_swap:
             new_model[j] = 1 - model[j]
