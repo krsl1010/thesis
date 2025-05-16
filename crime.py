@@ -110,7 +110,7 @@ def mjmcmc(num_iterations, data, p, large_prob=0.05, T=1):
             pre_opt_lik = log_lik(proposed, data)
             proposed = local_optim(proposed, s, data, T=T)
             post_opt_lik = log_lik(proposed, data)
-            #print(f"Local opt change: {post_opt_lik - pre_opt_lik}")
+            print(f"Local optimzaion change change: {(post_opt_lik - pre_opt_lik):.2f}")
             #uncomment to test optim routine 
             chi_k_star = proposed.copy() 
 
@@ -224,22 +224,25 @@ def hundred_runs(n_runs=100, n_iter=30000, T=1):
     np.savetxt(f"rmse_{T}.txt", rmse*100)
 
 def trace_plots(df, sample):
-    plt.figure(figsize=(12, 5))
+    plt.figure()
     plt.subplot(1, 2, 1)
     plt.plot([np.sum(model) for model in sample])
     plt.xlabel("Iteration")
     plt.ylabel("Number of included covariates")
-    plt.title("Trace plot: Inclusions: ")
+    plt.title("Trace plot for included coviarates")
     plt.subplot(1, 2, 2)
-    plt.plot([log_lik(df, model,) for model in sample])
+    plt.plot([log_lik(model, df) for model in sample])
     plt.xlabel("Iteration")
     plt.ylabel("Log-likelihood")
-    plt.title("Trace plot: Log-likelihood")
+    plt.title("Trace plot for the Log-likelihood")
     plt.tight_layout()
+    plt.savefig("diag.pdf")
     plt.show()
 
 
 if __name__ == "__main__":
-    print("Enter number of runs: ")
-    n_runs = int(input())
-    hundred_runs(n_runs, n_iter=3276, T=10)
+    #print("Enter number of runs: ")
+    #n_runs = int(input())
+    #hundred_runs(n_runs, n_iter=3276, T=10)
+    sample = mjmcmc(3276, df, 15, large_prob=0.05, T=1)
+    trace_plots(df, sample)

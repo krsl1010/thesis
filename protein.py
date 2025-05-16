@@ -152,13 +152,13 @@ def mjmcmc(num_iterations, X, y, p, large_prob=0.05, T=1):
     print(f"Unique models visited: {len(unique_vals)}")
     return sample
 
-df = pd.read_csv("proteincen.txt", header=None, sep=" ")
+df = pd.read_csv("data/proteincen.txt", header=None, sep=" ")
 y = df.iloc[:, 0]
 x = df.iloc[:, 1:]
 y = y.to_numpy()
 x = x.to_numpy()
 
-sample = mjmcmc(30000, x, y, 88, large_prob=0.05, T=10)
+sample = mjmcmc(30000, x, y, 88, large_prob=0.05, T=2)
 pi_j = renormalized_model(sample, x, y)
 unique_samples = np.unique(sample, axis=0)
 no_unique = len(unique_samples)
@@ -170,16 +170,16 @@ posteriors_mj = np.exp(likelihoods_mj)
 print("Large jumps enabled: ")
 print("Total posterior: ", posteriors_mj.sum())
 
-sample2 = mjmcmc(30000, x, y, 88, large_prob=0.00, T=10)
+sample2 = mjmcmc(30000, x, y, 88, large_prob=0.00, T=2)
 
-pi_j = renormalized_model(sample, x, y)
-unique_samples = np.unique(sample, axis=0)
+pi_j = renormalized_model(sample2, x, y)
+unique_samples = np.unique(sample2, axis=0)
 no_unique = len(unique_samples)
 #posteriors_mj = np.zeros(no_unique)
-likelihoods_mj = np.zeros(no_unique) 
+likelihoods_mc = np.zeros(no_unique) 
 for j in range(no_unique):
-    likelihoods_mj[j] = log_lik(unique_samples[j], x, y)
-posteriors_mj = np.exp(likelihoods_mj)
+    likelihoods_mc[j] = log_lik(unique_samples[j], x, y)
+posteriors_mc = np.exp(likelihoods_mc)
 print("No large jumps: ")
-print("Total posterior: ", posteriors_mj.sum())
+print("Total posterior: ", posteriors_mc.sum())
 
