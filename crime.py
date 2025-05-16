@@ -130,11 +130,9 @@ def mjmcmc(num_iterations, data, p, large_prob=0.05, T=1):
 
             # Calculate model probabilities
             swaps_cur = np.where(reverse != proposed)[0]
-            k = len(swaps_cur)
-            current_prob = k * np.log(0.1) + (p - k) * np.log(0.9) + np.log(comb(p, k))
+            current_prob = np.log(0.1**len(swaps_cur)) / comb(p, len(swaps_cur))
 
             swaps_prop = np.where(large_jump != chi_k_star)[0]
-            k = len(swaps_prop)
             prop_prob = np.log(0.1**len(swaps_prop)) - np.log(comb(p, len(swaps_prop)))
         else:
             # Perform swap 
